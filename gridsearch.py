@@ -98,29 +98,27 @@ def create_model(optimizer='rmsprop'):
     print(model.summary())
     return model
 
+def gridSearchScript(optimizers=['rmsprop'], init=['he-normal'], epochs=[5], batches=[32], cv_stack=[2], kl_size=[(3,3)], cv_filters=[[32,64,128]], dense_size_candidates=[[512,128]]):
 #Params and Grid definition
-optimizers = ['rmsprop']
-init = ['he_normal']
-epochs = [5]
-batches = [32, 64, 128, 256]
-cv_stack = [2]
-kl_size = [(3, 3)]
-cv_filters = [[32, 64, 128]]
-dense_size_candidates = [[512, 128]]
-param_grid = dict(optimizer=optimizers,
-                  epochs=epochs, 
-                  batch_size=batches)
+    param_grid = dict(optimizer=optimizers,
+                      init=init,                       
+                      epochs=epochs, 
+                      batch_size=batches,
+                      cv_stack=cv_stack,
+                      kl_size=kl_size,
+                      cv_filters=cv_filters,
+                      dense_size_candidates=dense_size_candidates)
 
-model = KerasClassifier(build_fn=create_model, verbose=2)
-grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
-grid_result = grid.fit(x_train, y_train)
+    model = KerasClassifier(build_fn=create_model, verbose=2)
+    grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
+    grid_result = grid.fit(x_train, y_train)
 
-print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
-means = grid_result.cv_results_['mean_test_score']
-stds = grid_result.cv_results_['std_test_score']
-params = grid_result.cv_results_['params']
-for mean, stdev, param in zip(means, stds, params):
-	print("%f (%f) with: %r" % (mean, stdev, param))
+    print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+    means = grid_result.cv_results_['mean_test_score']
+    stds = grid_result.cv_results_['std_test_score']
+    params = grid_result.cv_results_['params']
+    for mean, stdev, param in zip(means, stds, params):
+        print("%f (%f) with: %r" % (mean, stdev, param))
 
-t2 = time.time()
-print("Time: %0.2fs" % (t2 - t1))
+    t2 = time.time()
+    print("Time: %0.2fs" % (t2 - t1))
