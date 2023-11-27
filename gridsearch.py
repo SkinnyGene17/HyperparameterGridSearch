@@ -98,16 +98,16 @@ def create_model(optimizer='rmsprop'):
     print(model.summary())
     return model
 
-def gridSearchScript(optimizers=['rmsprop'], init=['he-normal'], epochs=[5], batches=[32], cv_stack=[2], kl_size=[(3,3)], cv_filters=[[32,64,128]], dense_size_candidates=[[512,128]]):
+def gridSearchScript(optimizers=['rmsprop'], init=['he-normal'], epochs=[5], batches=[32]):#, cv_stack=[2], kl_size=[(3,3)]): #, cv_filters=[[32,64,128]], dense_size_candidates=[[512,128]]):
 #Params and Grid definition
     param_grid = dict(optimizer=optimizers,
-                      init=init,                       
+                      #init=init,                       
                       epochs=epochs, 
-                      batch_size=batches,
-                      cv_stack=cv_stack,
-                      kl_size=kl_size,
-                      cv_filters=cv_filters,
-                      dense_size_candidates=dense_size_candidates)
+                      batch_size=batches)
+                      #cv_stack=cv_stack,
+                      #kl_size=kl_size)
+                      #cv_filters=cv_filters,
+                      #dense_size_candidates=dense_size_candidates)
 
     model = KerasClassifier(build_fn=create_model, verbose=2)
     grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
@@ -122,3 +122,5 @@ def gridSearchScript(optimizers=['rmsprop'], init=['he-normal'], epochs=[5], bat
 
     t2 = time.time()
     print("Time: %0.2fs" % (t2 - t1))
+    
+gridSearchScript(batches=[32, 64, 128])
