@@ -123,4 +123,4 @@ def gridSearchScript(optimizers=['rmsprop'], init=['he-normal'], epochs=[5], bat
     t2 = time.time()
     print("Time: %0.2fs" % (t2 - t1))
     
-gridSearchScript(batches=[32, 64, 128])
+#gridSearchScript(batches=[32, 64, 128], epochs=[5, 10, 15, 20])
